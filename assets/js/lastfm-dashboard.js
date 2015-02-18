@@ -1,0 +1,35 @@
+var MhorLastFmDashboard = MhorLastFmDashboard || {};
+
+MhorLastFmDashboard.commonMethod = {
+    username: "", // define regex for name validation
+    apiKey: "" // define regex for phone no validation
+};
+
+function LastFmApiClient(username, apiKey) {
+    this.endpoint = "http://ws.audioscrobbler.com/2.0/?method=";
+    this.format = "json";
+    this.apiKey = apiKey;
+    this.username = username;
+}
+
+LastFmApiClient.prototype.addQueryParameters = function () {
+    return this.addAppkeyParameter() + this.addFormatParameter();
+};
+
+LastFmApiClient.prototype.addAppkeyParameter = function () {
+    return "&api_key=" + this.apiKey;
+};
+
+LastFmApiClient.prototype.addFormatParameter = function () {
+    return "&format=" + this.format;
+};
+
+LastFmApiClient.prototype.callApi = function (url, callback) {
+    $.get(url, function (data) {
+        callback(data);
+    });
+};
+
+LastFmApiClient.prototype.getUserInfo = function (callback) {
+    this.callApi(this.endpoint + "user.getinfo&user=" + this.username + this.addQueryParameters(), callback);
+};
