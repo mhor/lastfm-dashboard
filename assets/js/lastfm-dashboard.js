@@ -33,3 +33,7 @@ LastFmApiClient.prototype.callApi = function (url, callback) {
 LastFmApiClient.prototype.getUserInfo = function (callback) {
     this.callApi(this.endpoint + "user.getinfo&user=" + this.username + this.addQueryParameters(), callback);
 };
+
+LastFmApiClient.prototype.getArtistCount = function (callback) {
+    this.callApi(this.endpoint + "library.getArtists&user=" + this.username + "&limit=1" + this.addQueryParameters(), callback);
+};

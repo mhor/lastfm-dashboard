@@ -33,6 +33,16 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Number of artists
+                </div>
+                <div class="chart-stage">
+                    <div id="number-of-artists"></div>
+                </div>
+            </div>
+        </div>
     </div>
     <hr>
 
@@ -67,7 +77,17 @@
             .render()
         ;
     });
-</script>
 
+    lastFmApiClient.getArtistCount(function(artists) {
+        new Keen.Dataviz()
+            .el(document.getElementById('number-of-artists'))
+            .parseRawData({ result: parseInt(artists.artists['@attr'].total) })
+            .chartType("metric")
+            .colors(["#3A4F72"])
+            .title("Artists")
+            .render()
+        ;
+    });
+</script>
 </body>
 </html>
