@@ -66,30 +66,36 @@
     var username = 'mhor_';
     var apiKey = 'ba93121ef5720d1b6939e73d6f1bc80e';
 
-    var lastFmApiClient = new LastFmApiClient(username, apiKey);
-    lastFmApiClient.getUserInfo(function(userInfo) {
-        new Keen.Dataviz()
-            .el(document.getElementById('number-of-scrobbles'))
-            .parseRawData({ result: parseInt(userInfo.user.playcount) })
-            .chartType("metric")
-            .chartOptions({prettyNumber: false})
-            .colors(["#6ab975"])
-            .title("Scrobbles")
-            .render()
-        ;
-    });
+    var nbArtists = new Keen.Dataviz()
+        .el(document.getElementById('number-of-artists'))
+        .chartOptions({prettyNumber: false})
+        .chartType("metric")
+        .colors(["#3A4F72"])
+        .title("Artists")
+    ;
 
-    lastFmApiClient.getArtistCount(function(artists) {
-        new Keen.Dataviz()
-            .el(document.getElementById('number-of-artists'))
-            .parseRawData({ result: parseInt(artists.artists['@attr'].total) })
-            .chartOptions({prettyNumber: false})
-            .chartType("metric")
-            .colors(["#3A4F72"])
-            .title("Artists")
-            .render()
-        ;
-    });
+    var nbScrobbles = new Keen.Dataviz()
+        .el(document.getElementById('number-of-scrobbles'))
+        .chartType("metric")
+        .chartOptions({prettyNumber: false})
+        .colors(["#6ab975"])
+        .title("Scrobbles")
+    ;
+
+    var lastFmApiClient = new LastFmApiClient(username, apiKey);
+    var updateScrobbles = function(userInfo) {
+       nbScrobbles.parseRawData({ result: parseInt(userInfo.user.playcount) }).render();
+    };
+    var updateArtists = function(artists) {
+        nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
+    };
+    lastFmApiClient.getArtistCount(updateArtists);
+    lastFmApiClient.getUserInfo(updateScrobbles);
+
+    setInterval(function() {
+        lastFmApiClient.getArtistCount(updateArtists);
+        lastFmApiClient.getUserInfo(updateScrobbles);
+    }, 60000);
 </script>
 </body>
 </html>
