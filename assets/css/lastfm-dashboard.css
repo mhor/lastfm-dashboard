@@ -1,3 +1,7 @@
+.right-col {
+    padding-right: 15px;
+}
+
 .glyphicon {
     font-size: 110%;
 }
@@ -11,6 +15,6 @@
     font-size: 140%;
 }
 
-.album{
+.album {
     font-size: 140%;
 }

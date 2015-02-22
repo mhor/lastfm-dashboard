@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div id="currently-playing-container" class="col-sm-3">
+        <div id="currently-playing-container" class="col-sm-4">
             <div class="chart-wrapper">
                 <div class="chart-title">
                     Currently Playing
@@ -54,7 +54,7 @@
                         <div class="col-md-4">
                             <div class="art"></div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-8 right-col">
                             <div class="row">
                                 <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                 <span class="track"></span>
@@ -69,6 +69,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div id="last-scrobble-container" class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Last Scrobble
+                </div>
+                <div class="chart-stage">
+                    <div id="last-scrobble"></div>
                 </div>
             </div>
         </div>
@@ -111,6 +121,13 @@
                     .title("Scrobbles")
             ;
 
+    var lastScrobble = new Keen.Dataviz()
+                    .el(document.getElementById('last-scrobble'))
+                    .chartType("metric")
+                    .colors(["#473F70"])
+                    .title("Last scrobble")
+            ;
+
     var refreshTime = 30000;
     var currentlyPlaying = $(document.getElementById('currently-playing'));
 
@@ -125,7 +142,9 @@
     var updatePlayingTrack = function (lastTracks) {
         var lastTrack = lastTracks.recenttracks.track[0];
         var currentlyPlayingContainer = $('#currently-playing-container');
+        var lastScrobbleContainer = $('#last-scrobble-container');
         currentlyPlayingContainer.hide();
+        lastScrobbleContainer.hide();
         if (lastTrack["@attr"] !== undefined &&
                 lastTrack["@attr"]['nowplaying'] !== undefined &&
                 lastTrack["@attr"]["nowplaying"] === "true"
@@ -135,6 +154,30 @@
             currentlyPlaying.find('.album').html(lastTrack.album['#text']);
             currentlyPlaying.find('.artist').html(lastTrack.artist['#text']);
             currentlyPlayingContainer.show();
+        } else {
+            var difference = (Date.now() /1000 |0) - lastTrack.date.uts;
+            var daysDifference = Math.floor(difference/60/60/24);
+            difference -= daysDifference*60*60*24;
+            var hoursDifference = Math.floor(difference/60/60);
+            difference -= hoursDifference*60*60;
+            var minutesDifference = Math.floor(difference/60);
+            if (daysDifference>0) {
+                lastScrobble
+                        .title('Days')
+                        .parseRawData({ result: hoursDifference })
+                        .render();
+            } else if(hoursDifference>0) {
+                lastScrobble
+                        .title('Hours')
+                        .parseRawData({ result: hoursDifference })
+                        .render();
+            } else {
+                lastScrobble
+                        .title('Minutes')
+                        .parseRawData({ result: minutesDifference })
+                        .render();
+            }
+            lastScrobbleContainer.show();
         }
     };
 
@@ -142,11 +185,12 @@
     lastFmApiClient.getUserInfo(updateScrobbles);
     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
 
-    setInterval(function () {
-        lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
-        lastFmApiClient.getArtistCount(updateArtists);
-        lastFmApiClient.getUserInfo(updateScrobbles);
-    }, refreshTime);
+     setInterval(function () {
+     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
+     lastFmApiClient.getArtistCount(updateArtists);
+     lastFmApiClient.getUserInfo(updateScrobbles);
+     }, refreshTime);
+
 </script>
 </body>
 </html>
