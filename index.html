@@ -4,6 +4,7 @@
     <title>LastFm Dashboard</title>
     <link rel="stylesheet" href="assets/lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/keen-dashboards.css">
+    <link rel="stylesheet" href="assets/css/lastfm-dashboard.css">
 </head>
 <body class="application">
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -43,6 +44,34 @@
                 </div>
             </div>
         </div>
+        <div id="currently-playing-container" class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Currently Playing
+                </div>
+                <div class="chart-stage">
+                    <div class="row" id="currently-playing">
+                        <div class="col-md-4">
+                            <div class="art"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                <span class="track"></span>
+                            </div>
+                            <div class="row">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span class="artist"></span>
+                            </div>
+                            <div class="row">
+                                <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+                                <span class="album"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <hr>
 
@@ -67,35 +96,57 @@
     var apiKey = 'ba93121ef5720d1b6939e73d6f1bc80e';
 
     var nbArtists = new Keen.Dataviz()
-        .el(document.getElementById('number-of-artists'))
-        .chartOptions({prettyNumber: false})
-        .chartType("metric")
-        .colors(["#3A4F72"])
-        .title("Artists")
-    ;
+                    .el(document.getElementById('number-of-artists'))
+                    .chartOptions({prettyNumber: false})
+                    .chartType("metric")
+                    .colors(["#3A4F72"])
+                    .title("Artists")
+            ;
 
     var nbScrobbles = new Keen.Dataviz()
-        .el(document.getElementById('number-of-scrobbles'))
-        .chartType("metric")
-        .chartOptions({prettyNumber: false})
-        .colors(["#6ab975"])
-        .title("Scrobbles")
-    ;
+                    .el(document.getElementById('number-of-scrobbles'))
+                    .chartType("metric")
+                    .chartOptions({prettyNumber: false})
+                    .colors(["#6ab975"])
+                    .title("Scrobbles")
+            ;
+
+    var refreshTime = 30000;
+    var currentlyPlaying = $(document.getElementById('currently-playing'));
 
     var lastFmApiClient = new LastFmApiClient(username, apiKey);
-    var updateScrobbles = function(userInfo) {
-       nbScrobbles.parseRawData({ result: parseInt(userInfo.user.playcount) }).render();
+    var updateScrobbles = function (userInfo) {
+        nbScrobbles.parseRawData({ result: parseInt(userInfo.user.playcount) }).render();
     };
-    var updateArtists = function(artists) {
+    var updateArtists = function (artists) {
         nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
     };
+
+    var updatePlayingTrack = function (lastTracks) {
+        var lastTrack = lastTracks.recenttracks.track[0];
+        var currentlyPlayingContainer = $('#currently-playing-container');
+        currentlyPlayingContainer.hide();
+        if (lastTrack["@attr"] !== undefined &&
+                lastTrack["@attr"]['nowplaying'] !== undefined &&
+                lastTrack["@attr"]["nowplaying"] === "true"
+                ) {
+            currentlyPlaying.find('.art').html('<img src="' + lastTrack.image[2]['#text'] + '"></img>');
+            currentlyPlaying.find('.track').html(lastTrack.name);
+            currentlyPlaying.find('.album').html(lastTrack.album['#text']);
+            currentlyPlaying.find('.artist').html(lastTrack.artist['#text']);
+            currentlyPlayingContainer.show();
+        }
+    };
+
     lastFmApiClient.getArtistCount(updateArtists);
     lastFmApiClient.getUserInfo(updateScrobbles);
+    lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
 
-    setInterval(function() {
+    setInterval(function () {
+        lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
         lastFmApiClient.getArtistCount(updateArtists);
         lastFmApiClient.getUserInfo(updateScrobbles);
-    }, 60000);
+    }, refreshTime);
 </script>
 </body>
 </html>
