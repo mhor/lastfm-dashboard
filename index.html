@@ -44,6 +44,16 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Average Scrobble per day
+                </div>
+                <div class="chart-stage">
+                    <div id="average-scrobbles"></div>
+                </div>
+            </div>
+        </div>
         <div id="currently-playing-container" class="col-sm-4">
             <div class="chart-wrapper">
                 <div class="chart-title">
@@ -79,6 +89,18 @@
                 </div>
                 <div class="chart-stage">
                     <div id="last-scrobble"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Member since
+                </div>
+                <div class="chart-stage">
+                    <div id="member-since"></div>
                 </div>
             </div>
         </div>
@@ -128,12 +150,30 @@
                     .title("Last scrobble")
             ;
 
+    var averageScrobble = new Keen.Dataviz()
+                    .el(document.getElementById('average-scrobbles'))
+                    .chartType("metric")
+                    .colors(["#A8794B"])
+                    .title("Scrobbles")
+            ;
+
+    var memberSince = new Keen.Dataviz()
+                    .el(document.getElementById('member-since'))
+                    .chartType("metric")
+                    .colors(["#4BA1A8"])
+                    .title("Days")
+            ;
+
     var refreshTime = 30000;
     var currentlyPlaying = $(document.getElementById('currently-playing'));
 
     var lastFmApiClient = new LastFmApiClient(username, apiKey);
     var updateScrobbles = function (userInfo) {
         nbScrobbles.parseRawData({ result: parseInt(userInfo.user.playcount) }).render();
+        var difference = (Date.now() /1000 |0) - userInfo.user.registered.unixtime;
+        var daysDifference = Math.floor(difference/60/60/24);
+        memberSince.parseRawData({ result: parseInt(daysDifference) }).render();
+        averageScrobble.parseRawData({ result: parseInt(userInfo.user.playcount/daysDifference) }).render();
     };
     var updateArtists = function (artists) {
         nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
