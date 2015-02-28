@@ -97,6 +97,7 @@
         <div class="col-sm-3">
             <div class="chart-wrapper">
                 <div class="chart-title">
+
                     Member since
                 </div>
                 <div class="chart-stage">
@@ -219,6 +220,11 @@
             }
             lastScrobbleContainer.show();
         }
+
+        var lastPlayedTrackContainer = $('#last-played-tracks');
+        $(lastTracks.recenttracks.track).each(function (index, track) {
+            lastPlayedTrackContainer.append('<div class="row">dd</div>');
+        });
     };
 
     lastFmApiClient.getArtistCount(updateArtists);
