@@ -97,11 +97,20 @@
         <div class="col-sm-3">
             <div class="chart-wrapper">
                 <div class="chart-title">
-
                     Member since
                 </div>
                 <div class="chart-stage">
                     <div id="member-since"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Last played tracks
+                </div>
+                <div class="chart-stage">
+                    <div id="last-played-tracks"></div>
                 </div>
             </div>
         </div>
@@ -171,10 +180,10 @@
     var lastFmApiClient = new LastFmApiClient(username, apiKey);
     var updateScrobbles = function (userInfo) {
         nbScrobbles.parseRawData({ result: parseInt(userInfo.user.playcount) }).render();
-        var difference = (Date.now() /1000 |0) - userInfo.user.registered.unixtime;
-        var daysDifference = Math.floor(difference/60/60/24);
+        var difference = (Date.now() / 1000 | 0) - userInfo.user.registered.unixtime;
+        var daysDifference = Math.floor(difference / 60 / 60 / 24);
         memberSince.parseRawData({ result: parseInt(daysDifference) }).render();
-        averageScrobble.parseRawData({ result: parseInt(userInfo.user.playcount/daysDifference) }).render();
+        averageScrobble.parseRawData({ result: parseInt(userInfo.user.playcount / daysDifference) }).render();
     };
     var updateArtists = function (artists) {
         nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
@@ -196,18 +205,18 @@
             currentlyPlaying.find('.artist').html(lastTrack.artist['#text']);
             currentlyPlayingContainer.show();
         } else {
-            var difference = (Date.now() /1000 |0) - lastTrack.date.uts;
-            var daysDifference = Math.floor(difference/60/60/24);
-            difference -= daysDifference*60*60*24;
-            var hoursDifference = Math.floor(difference/60/60);
-            difference -= hoursDifference*60*60;
-            var minutesDifference = Math.floor(difference/60);
-            if (daysDifference>0) {
+            var difference = (Date.now() / 1000 | 0) - lastTrack.date.uts;
+            var daysDifference = Math.floor(difference / 60 / 60 / 24);
+            difference -= daysDifference * 60 * 60 * 24;
+            var hoursDifference = Math.floor(difference / 60 / 60);
+            difference -= hoursDifference * 60 * 60;
+            var minutesDifference = Math.floor(difference / 60);
+            if (daysDifference > 0) {
                 lastScrobble
                         .title('Days')
                         .parseRawData({ result: hoursDifference })
                         .render();
-            } else if(hoursDifference>0) {
+            } else if (hoursDifference > 0) {
                 lastScrobble
                         .title('Hours')
                         .parseRawData({ result: hoursDifference })
@@ -222,8 +231,13 @@
         }
 
         var lastPlayedTrackContainer = $('#last-played-tracks');
+        lastPlayedTrackContainer.empty();
         $(lastTracks.recenttracks.track).each(function (index, track) {
-            lastPlayedTrackContainer.append('<div class="row">dd</div>');
+            lastPlayedTrackContainer.append(createPlayingNode(
+                    track.image[0]['#text'],
+                    track.name,
+                    track.artist['#text']
+            )).append('<hr>');
         });
     };
 
@@ -231,12 +245,19 @@
     lastFmApiClient.getUserInfo(updateScrobbles);
     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
 
-     setInterval(function () {
-     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
-     lastFmApiClient.getArtistCount(updateArtists);
-     lastFmApiClient.getUserInfo(updateScrobbles);
-     }, refreshTime);
+    setInterval(function () {
+        lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
+        lastFmApiClient.getArtistCount(updateArtists);
+        lastFmApiClient.getUserInfo(updateScrobbles);
+    }, refreshTime);
 
+    function createPlayingNode(image, title, artist) {
+        return '<div class="row">' +
+                '<div class="col-md-3 art left-col"><img src="' + image + '"></div>' +
+                '<div class="col-md-9 col-md-8 right-col" style="text-align: right">' + title + ' - ' + artist + '</div>' +
+            '</div>'
+        ;
+    }
 </script>
 </body>
 </html>
