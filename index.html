@@ -95,12 +95,24 @@
     </div>
     <div class="row">
         <div class="col-sm-3">
-            <div class="chart-wrapper">
-                <div class="chart-title">
-                    Member since
+            <div class="row">
+                <div class="chart-wrapper">
+                    <div class="chart-title">
+                        Member since
+                    </div>
+                    <div class="chart-stage">
+                        <div id="member-since"></div>
+                    </div>
                 </div>
-                <div class="chart-stage">
-                    <div id="member-since"></div>
+            </div>
+            <div class="row">
+                <div class="chart-wrapper">
+                    <div class="chart-title">
+                        Participated events
+                    </div>
+                    <div class="chart-stage">
+                        <div id="participated-events"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,6 +186,13 @@
                     .title("Days")
             ;
 
+    var participatedEvents = new Keen.Dataviz()
+                    .el(document.getElementById('participated-events'))
+                    .chartType("metric")
+                    .colors(["#812E98"])
+                    .title("Events")
+            ;
+
     var refreshTime = 30000;
     var currentlyPlaying = $(document.getElementById('currently-playing'));
 
@@ -187,6 +206,10 @@
     };
     var updateArtists = function (artists) {
         nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
+    };
+
+    var updateEvents = function (events) {
+        participatedEvents.parseRawData({ result: parseInt(events.events['@attr'].total) }).render();
     };
 
     var updatePlayingTrack = function (lastTracks) {
@@ -244,6 +267,7 @@
     lastFmApiClient.getArtistCount(updateArtists);
     lastFmApiClient.getUserInfo(updateScrobbles);
     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
+    lastFmApiClient.getEvents(updateEvents);
 
     setInterval(function () {
         lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
