@@ -1,8 +1,8 @@
 var MhorLastFmDashboard = MhorLastFmDashboard || {};
 
 MhorLastFmDashboard.commonMethod = {
-    username: "", // define regex for name validation
-    apiKey: "" // define regex for phone no validation
+    username: "",
+    apiKey: ""
 };
 
 function LastFmApiClient(username, apiKey) {
