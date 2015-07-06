@@ -130,7 +130,22 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Average played track by artists
+                        </div>
+                        <div class="chart-stage">
+                            <div id="average-played-track-by-artist"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <hr>
 
     <p class="small text-muted">Built with <a href="http://keen.github.io/dashboards/">Keen Dashboard</a></p>
@@ -197,6 +212,13 @@
                     .title("Events")
             ;
 
+    var averagePlayedTrackByArtist = new Keen.Dataviz()
+                    .el(document.getElementById('average-played-track-by-artist'))
+                    .chartType("metric")
+                    .colors(["#49c5b1"])
+                    .title("Tracks")
+            ;
+
     var refreshTime = 30000;
     var currentlyPlaying = $(document.getElementById('currently-playing'));
 
@@ -207,9 +229,16 @@
         var daysDifference = Math.floor(difference / 60 / 60 / 24);
         memberSince.parseRawData({ result: parseInt(daysDifference) }).render();
         averageScrobble.parseRawData({ result: parseInt(userInfo.user.playcount / daysDifference) }).render();
+
+        lastFmApiClient.getArtistCount(updateArtists);
     };
+
     var updateArtists = function (artists) {
         nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
+
+        averagePlayedTrackByArtist.parseRawData({result: parseInt(
+                        nbScrobbles.dataset.data.input.result / artists.artists['@attr'].total
+        )}).render();
     };
 
     var updateEvents = function (events) {
@@ -236,8 +265,6 @@
             var daysDifference = Math.floor(difference / 60 / 60 / 24);
             difference -= daysDifference * 60 * 60 * 24;
             var hoursDifference = Math.floor(difference / 60 / 60);
-            difference -= hoursDifference * 60 * 60;
-            var minutesDifference = Math.floor(difference / 60);
             if (daysDifference > 0) {
                 lastScrobble
                         .title('Days')
@@ -268,7 +295,6 @@
         });
     };
 
-    lastFmApiClient.getArtistCount(updateArtists);
     lastFmApiClient.getUserInfo(updateScrobbles);
     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
     lastFmApiClient.getEvents(updateEvents);
@@ -277,14 +303,15 @@
         lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
         lastFmApiClient.getArtistCount(updateArtists);
         lastFmApiClient.getUserInfo(updateScrobbles);
+        lastFmApiClient.getUserInfo(updateScrobbles);
     }, refreshTime);
 
     function createPlayingNode(image, title, artist) {
         return '<div class="row">' +
                 '<div class="col-md-3 art left-col"><img src="' + image + '"></div>' +
                 '<div class="col-md-9 col-md-8 right-col" style="text-align: right">' + title + ' - ' + artist + '</div>' +
-            '</div>'
-        ;
+                '</div>'
+                ;
     }
 </script>
 </body>
