@@ -265,6 +265,8 @@
             var daysDifference = Math.floor(difference / 60 / 60 / 24);
             difference -= daysDifference * 60 * 60 * 24;
             var hoursDifference = Math.floor(difference / 60 / 60);
+            difference -= hoursDifference * 60 * 60;
+            var minutesDifference = Math.floor(difference / 60);
             if (daysDifference > 0) {
                 lastScrobble
                         .title('Days')
