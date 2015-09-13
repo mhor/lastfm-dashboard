@@ -255,7 +255,13 @@
                 lastTrack["@attr"]['nowplaying'] !== undefined &&
                 lastTrack["@attr"]["nowplaying"] === "true"
                 ) {
-            currentlyPlaying.find('.art').html('<img src="' + lastTrack.image[2]['#text'] + '"></img>');
+
+            var image = lastTrack.image[2]['#text'];
+            if (image == "") {
+                image = "assets/img/no_disc.png";
+            }
+
+            currentlyPlaying.find('.art').html('<img src="' + image + '" width="140px"></img>');
             currentlyPlaying.find('.track').html(lastTrack.name);
             currentlyPlaying.find('.album').html(lastTrack.album['#text']);
             currentlyPlaying.find('.artist').html(lastTrack.artist['#text']);
@@ -309,11 +315,16 @@
     }, refreshTime);
 
     function createPlayingNode(image, title, artist) {
+
+        if (image == "") {
+            image = "assets/img/no_disc.png";
+        }
+
         return '<div class="row">' +
-                '<div class="col-md-3 art left-col"><img src="' + image + '"></div>' +
+                '<div class="col-md-3 art left-col"><img src="' + image + '" width="34px"></div>' +
                 '<div class="col-md-9 col-md-8 right-col" style="text-align: right">' + title + ' - ' + artist + '</div>' +
                 '</div>'
-                ;
+        ;
     }
 </script>
 </body>
