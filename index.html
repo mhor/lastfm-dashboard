@@ -3,6 +3,7 @@
 <head>
     <title>LastFm Dashboard</title>
     <link rel="stylesheet" href="assets/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/lib/ekko-lightbox/dist/ekko-lightbox.min.css">
     <link rel="stylesheet" href="assets/css/keen-dashboards.css">
     <link rel="stylesheet" href="assets/css/lastfm-dashboard.css">
 </head>
@@ -162,6 +163,7 @@
 
 <script src="assets/lib/keen-js/dist/keen.min.js"></script>
 <script src="assets/js/meta.js"></script>
+<script src="assets/lib/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
 <script src="assets/js/lastfm-dashboard.js"></script>
 
 <script type="text/javascript">
@@ -257,11 +259,13 @@
                 ) {
 
             var image = lastTrack.image[2]['#text'];
+            var imageLightBox = lastTrack.image[3]['#text'];
             if (image == "") {
                 image = "assets/img/no_disc.png";
+                imageLightBox = "assets/img/no_disc.png";
             }
 
-            currentlyPlaying.find('.art').html('<img src="' + image + '" width="140px"></img>');
+            currentlyPlaying.find('.art').html('<img data-title="'+ lastTrack.name + ' - ' + lastTrack.artist['#text'] +'" data-remote="' + imageLightBox +'"  data-toggle="lightbox" src="' + image + '" width="140px"></img>');
             currentlyPlaying.find('.track').html(lastTrack.name);
             currentlyPlaying.find('.album').html(lastTrack.album['#text']);
             currentlyPlaying.find('.artist').html(lastTrack.artist['#text']);
@@ -297,6 +301,7 @@
         $(lastTracks.recenttracks.track).each(function (index, track) {
             lastPlayedTrackContainer.append(createPlayingNode(
                     track.image[0]['#text'],
+                    track.image[3]['#text'],
                     track.name,
                     track.artist['#text']
             )).append('<hr>');
@@ -314,18 +319,25 @@
         lastFmApiClient.getUserInfo(updateScrobbles);
     }, refreshTime);
 
-    function createPlayingNode(image, title, artist) {
+    function createPlayingNode(image, imageLightBox, title, artist) {
+
 
         if (image == "") {
             image = "assets/img/no_disc.png";
+            imageLightBox = "assets/img/no_disc.png";
         }
 
         return '<div class="row">' +
-                '<div class="col-md-3 art left-col"><img src="' + image + '" width="34px"></div>' +
+                '<div class="col-md-3 art left-col"><img data-title="'+ title + ' - ' + artist +'" data-remote="' + imageLightBox +'" data-toggle="lightbox" data-remote="' + image + '" src="' + image + '" width="34px"></div>' +
                 '<div class="col-md-9 col-md-8 right-col" style="text-align: right">' + title + ' - ' + artist + '</div>' +
                 '</div>'
         ;
     }
+
+    $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
 </script>
 </body>
 </html>
