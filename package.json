@@ -1,0 +1,21 @@
+{
+    "name": "mhor-lastfm-dashboard",
+    "version": "0.0.1",
+    "description": "My LastFm Stats",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mhor/lastfm-dashboard"
+    },
+    "author": "Maxime Horcholle",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mhor/lastfm-dashboard/issues"
+    },
+    "homepage": "https://github.com/mhor/lastfm-dashboard",
+    "devDependencies": {
+        "fs-extra": "^0.24.0",
+        "gulp": "^3.9.0",
+        "gulp-webserver": "^0.9.1",
+        "nopt": "^3.0.4"
+    }
+}

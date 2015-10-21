@@ -1,7 +1,7 @@
 {
   "name": "mhor-lastfm_dashboards",
   "version": "0.0.1",
-  "homepage": "http://mhor.eu",
+  "homepage": "https://github.com/mhor/lastfm-dashboard",
   "authors": [
     "Maxime Horcholle <maxime.horcholle@gmail.com>"
   ],
@@ -14,10 +14,9 @@
     "tests"
   ],
   "dependencies": {
-    "keen-js": "~3.2.1",
-    "jquery": "~2.1.1",
-    "bootstrap": "~3.2.0",
-    "holderjs": "~2.3.2",
+    "keen-dashboards": "*",
+    "holderjs": "~2.3.*",
+    "keen-js": "~3.2.*",
     "ekko-lightbox": "~3.3.3"
   }
 }

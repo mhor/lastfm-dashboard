@@ -1,0 +1,25 @@
+language: node_js
+
+node_js:
+  - "0.12"
+
+sudo: false
+
+branches:
+  except:
+    - gh-pages
+
+before_install:
+  - echo -e "machine github.com\n  login $GH_TOKEN" >> ~/.netrc
+
+before_script:
+  - npm install -g gulp
+  - npm install -g bower
+  - npm install
+  - bower install
+
+script:
+  - tools/build.sh
+
+after_success:
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]  && [ "$TRAVIS_BRANCH" = 'master' ]; then tools/build.sh; fi
