@@ -23,7 +23,6 @@
 </div>
 
 <div class="container-fluid">
-
     <div class="row">
         <div class="col-sm-3">
             <div class="chart-wrapper">
@@ -145,6 +144,20 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Average played track by weeks
+                        </div>
+                        <div class="chart-stage">
+                            <div id="average-played-track-by-week"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <hr>
@@ -198,6 +211,13 @@
                     .title("Scrobbles")
             ;
 
+    var averageScrobbleByWeek = new Keen.Dataviz()
+                    .el(document.getElementById('average-played-track-by-week'))
+                    .chartType("metric")
+                    .colors(["#E57A44"])
+                    .title("Scrobbles")
+            ;
+
     var memberSince = new Keen.Dataviz()
                     .el(document.getElementById('member-since'))
                     .chartType("metric")
@@ -229,6 +249,7 @@
         var daysDifference = Math.floor(difference / 60 / 60 / 24);
         memberSince.parseRawData({ result: parseInt(daysDifference) }).render();
         averageScrobble.parseRawData({ result: parseInt(userInfo.user.playcount / daysDifference) }).render();
+        averageScrobbleByWeek.parseRawData({ result: parseInt((userInfo.user.playcount / daysDifference)) * 7 }).render();
 
         lastFmApiClient.getArtistCount(updateArtists);
     };
@@ -254,8 +275,7 @@
         if (lastTrack["@attr"] !== undefined &&
                 lastTrack["@attr"]['nowplaying'] !== undefined &&
                 lastTrack["@attr"]["nowplaying"] === "true"
-                ) {
-
+        ) {
             var image = lastTrack.image[2]['#text'];
             var imageLightBox = lastTrack.image[3]['#text'];
             if (image == "") {
@@ -318,7 +338,6 @@
     }, refreshTime);
 
     function createPlayingNode(image, imageLightBox, title, artist) {
-
 
         if (image == "") {
             image = "assets/img/no_disc.png";
