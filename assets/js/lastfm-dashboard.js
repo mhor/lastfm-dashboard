@@ -42,6 +42,6 @@ LastFmApiClient.prototype.getLastFiveTracks = function (callback) {
     this.callApi(this.endpoint + "user.getRecentTracks&user=" + this.username + "&limit=5" + this.addQueryParameters(), callback)
 };
 
-LastFmApiClient.prototype.getEvents = function (callback) {
-    this.callApi(this.endpoint + "user.getPastEvents&user=" + this.username + "&limit=1" + this.addQueryParameters(), callback)
+LastFmApiClient.prototype.getPlayCount = function (from, to, callback) {
+    this.callApi(this.endpoint + "user.getRecentTracks&user=" + this.username + "&limit=1&from=" + from + "&to=" + to + this.addQueryParameters(), callback)
 };

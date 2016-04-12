@@ -143,6 +143,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Today play count
+                        </div>
+                        <div class="chart-stage">
+                            <div id="today-playcount"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-sm-2">
             <div class="row">
@@ -153,6 +165,18 @@
                         </div>
                         <div class="chart-stage">
                             <div id="average-played-track-by-week"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Week play count
+                        </div>
+                        <div class="chart-stage">
+                            <div id="week-playcount"></div>
                         </div>
                     </div>
                 </div>
@@ -239,6 +263,21 @@
                     .title("Tracks")
             ;
 
+    var weekPlayCount = new Keen.Dataviz()
+                    .el(document.getElementById('week-playcount'))
+                    .chartType("metric")
+                    .colors(["#6A81A2"])
+                    .title("Scrobbles")
+            ;
+
+
+    var todayPlayCount = new Keen.Dataviz()
+                    .el(document.getElementById('today-playcount'))
+                    .chartType("metric")
+                    .colors(["#A20900"])
+                    .title("Scrobbles")
+            ;
+
     var refreshTime = 30000;
     var currentlyPlaying = $(document.getElementById('currently-playing'));
 
@@ -264,6 +303,14 @@
 
     var updateEvents = function (events) {
         participatedEvents.parseRawData({ result: parseInt(events.events['@attr'].total) }).render();
+    };
+
+    var updateTodayPlayCount = function (playcount) {
+        todayPlayCount.parseRawData({ result: parseInt(playcount.recenttracks['@attr'].total) }).render();
+    };
+
+    var updateWeekPlayCount = function (playcount) {
+        weekPlayCount.parseRawData({ result: parseInt(playcount.recenttracks['@attr'].total) }).render();
     };
 
     var updatePlayingTrack = function (lastTracks) {
@@ -326,15 +373,49 @@
         });
     };
 
+    var today = new Date();
+    var todayMidnight = new Date();
+    todayMidnight.setHours(0, 0, 0, 0);
+    function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay(),
+                diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+        return new Date(d.setDate(diff));
+    }
+
+    var monday = getMonday(new Date()); // Mon Nov 08 2010
+    monday.setHours(0, 0, 0, 0);
+
     lastFmApiClient.getUserInfo(updateScrobbles);
     lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
-    lastFmApiClient.getEvents(updateEvents);
+//    lastFmApiClient.getEvents(updateEvents);
+    lastFmApiClient.getPlayCount(
+        todayMidnight.getTime() / 1000,
+        Math.floor(today.getTime() / 1000),
+        updateTodayPlayCount
+    );
+
+    lastFmApiClient.getPlayCount(
+        monday.getTime() / 1000,
+        Math.floor(today.getTime() / 1000),
+        updateWeekPlayCount
+    );
 
     setInterval(function () {
         lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
         lastFmApiClient.getArtistCount(updateArtists);
         lastFmApiClient.getUserInfo(updateScrobbles);
-        lastFmApiClient.getUserInfo(updateScrobbles);
+        lastFmApiClient.getPlayCount(
+            todayMidnight.getTime() / 1000,
+            Math.floor(today.getTime() / 1000),
+            updateTodayPlayCount
+        );
+
+        lastFmApiClient.getPlayCount(
+            monday.getTime() / 1000,
+            Math.floor(today.getTime() / 1000),
+            updateWeekPlayCount
+        );
     }, refreshTime);
 
     function createPlayingNode(image, imageLightBox, title, artist) {
