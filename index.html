@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LastFm Dashboard</title>
+    <link rel="stylesheet" href="lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/css/ekko-lightbox.min.css">
+    <link rel="stylesheet" href="assets/css/keen-dashboards.css">
+    <link rel="stylesheet" href="assets/css/lastfm-dashboard.css">
+</head>
+<body class="application">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">LastFm Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Number of scrobbles
+                </div>
+                <div class="chart-stage">
+                    <div id="number-of-scrobbles"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Number of artists
+                </div>
+                <div class="chart-stage">
+                    <div id="number-of-artists"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Average Scrobble per day
+                </div>
+                <div class="chart-stage">
+                    <div id="average-scrobbles"></div>
+                </div>
+            </div>
+        </div>
+        <div id="currently-playing-container" class="col-sm-4">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Currently Playing
+                </div>
+                <div class="chart-stage">
+                    <div class="row" id="currently-playing">
+                        <div class="col-md-4">
+                            <div class="art"></div>
+                        </div>
+                        <div class="col-md-8 right-col">
+                            <div class="row">
+                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                <span class="track"></span>
+                            </div>
+                            <div class="row">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span class="artist"></span>
+                            </div>
+                            <div class="row">
+                                <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+                                <span class="album"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="last-scrobble-container" class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Last Scrobble
+                </div>
+                <div class="chart-stage">
+                    <div id="last-scrobble"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Member since
+                        </div>
+                        <div class="chart-stage">
+                            <div id="member-since"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Participated events
+                        </div>
+                        <div class="chart-stage">
+                            <div id="participated-events"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Last played tracks
+                </div>
+                <div class="chart-stage">
+                    <div id="last-played-tracks"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Average played track by artists
+                        </div>
+                        <div class="chart-stage">
+                            <div id="average-played-track-by-artist"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Today play count
+                        </div>
+                        <div class="chart-stage">
+                            <div id="today-playcount"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Average played track by weeks
+                        </div>
+                        <div class="chart-stage">
+                            <div id="average-played-track-by-week"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">
+                            Week play count
+                        </div>
+                        <div class="chart-stage">
+                            <div id="week-playcount"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <p class="small text-muted">Built with <a href="http://keen.github.io/dashboards/">Keen Dashboard</a></p>
+
+</div>
+
+<script src="lib/js/holder.js"></script>
+<script src="lib/js/jquery.min.js"></script>
+<script src="lib/js/bootstrap.min.js"></script>
+<script src="lib/js/keen.js"></script>
+<script src="lib/js/ekko-lightbox.min.js"></script>
+
+<script src="assets/js/meta.js"></script>
+<script src="assets/js/lastfm-dashboard.js"></script>
+<script>
+    Holder.add_theme("white", { background: "#fff", foreground: "#a7a7a7", size: 10 });
+</script>
+<script type="text/javascript">
+    var username = 'mhor_';
+    var apiKey = 'ba93121ef5720d1b6939e73d6f1bc80e';
+
+    var nbArtists = new Keen.Dataviz()
+                    .el(document.getElementById('number-of-artists'))
+                    .chartOptions({prettyNumber: false})
+                    .chartType("metric")
+                    .colors(["#3A4F72"])
+                    .title("Artists")
+            ;
+
+    var nbScrobbles = new Keen.Dataviz()
+                    .el(document.getElementById('number-of-scrobbles'))
+                    .chartType("metric")
+                    .chartOptions({prettyNumber: false})
+                    .colors(["#6ab975"])
+                    .title("Scrobbles")
+            ;
+
+    var lastScrobble = new Keen.Dataviz()
+                    .el(document.getElementById('last-scrobble'))
+                    .chartType("metric")
+                    .colors(["#473F70"])
+                    .title("Last scrobble")
+            ;
+
+    var averageScrobble = new Keen.Dataviz()
+                    .el(document.getElementById('average-scrobbles'))
+                    .chartType("metric")
+                    .colors(["#A8794B"])
+                    .title("Scrobbles")
+            ;
+
+    var averageScrobbleByWeek = new Keen.Dataviz()
+                    .el(document.getElementById('average-played-track-by-week'))
+                    .chartType("metric")
+                    .colors(["#E57A44"])
+                    .title("Scrobbles")
+            ;
+
+    var memberSince = new Keen.Dataviz()
+                    .el(document.getElementById('member-since'))
+                    .chartType("metric")
+                    .colors(["#4BA1A8"])
+                    .title("Days")
+            ;
+
+    var participatedEvents = new Keen.Dataviz()
+                    .el(document.getElementById('participated-events'))
+                    .chartType("metric")
+                    .colors(["#812E98"])
+                    .title("Events")
+            ;
+
+    var averagePlayedTrackByArtist = new Keen.Dataviz()
+                    .el(document.getElementById('average-played-track-by-artist'))
+                    .chartType("metric")
+                    .colors(["#49c5b1"])
+                    .title("Tracks")
+            ;
+
+    var weekPlayCount = new Keen.Dataviz()
+                    .el(document.getElementById('week-playcount'))
+                    .chartType("metric")
+                    .colors(["#6A81A2"])
+                    .title("Scrobbles")
+            ;
+
+
+    var todayPlayCount = new Keen.Dataviz()
+                    .el(document.getElementById('today-playcount'))
+                    .chartType("metric")
+                    .colors(["#A20900"])
+                    .title("Scrobbles")
+            ;
+
+    var refreshTime = 30000;
+    var currentlyPlaying = $(document.getElementById('currently-playing'));
+
+    var lastFmApiClient = new LastFmApiClient(username, apiKey);
+    var updateScrobbles = function (userInfo) {
+        nbScrobbles.parseRawData({ result: parseInt(userInfo.user.playcount) }).render();
+        var difference = (Date.now() / 1000 | 0) - userInfo.user.registered.unixtime;
+        var daysDifference = Math.floor(difference / 60 / 60 / 24);
+        memberSince.parseRawData({ result: parseInt(daysDifference) }).render();
+        averageScrobble.parseRawData({ result: parseInt(userInfo.user.playcount / daysDifference) }).render();
+        averageScrobbleByWeek.parseRawData({ result: parseInt((userInfo.user.playcount / daysDifference)) * 7 }).render();
+
+        lastFmApiClient.getArtistCount(updateArtists);
+    };
+
+    var updateArtists = function (artists) {
+        nbArtists.parseRawData({ result: parseInt(artists.artists['@attr'].total) }).render();
+
+        averagePlayedTrackByArtist.parseRawData({result: parseInt(
+                        nbScrobbles.dataset.data.input.result / artists.artists['@attr'].total
+        )}).render();
+    };
+
+    var updateEvents = function (events) {
+        participatedEvents.parseRawData({ result: parseInt(events.events['@attr'].total) }).render();
+    };
+
+    var updateTodayPlayCount = function (playcount) {
+        todayPlayCount.parseRawData({ result: parseInt(playcount.recenttracks['@attr'].total) }).render();
+    };
+
+    var updateWeekPlayCount = function (playcount) {
+        weekPlayCount.parseRawData({ result: parseInt(playcount.recenttracks['@attr'].total) }).render();
+    };
+
+    var updatePlayingTrack = function (lastTracks) {
+        var lastTrack = lastTracks.recenttracks.track[0];
+        var currentlyPlayingContainer = $('#currently-playing-container');
+        var lastScrobbleContainer = $('#last-scrobble-container');
+        currentlyPlayingContainer.hide();
+        lastScrobbleContainer.hide();
+        if (lastTrack["@attr"] !== undefined &&
+                lastTrack["@attr"]['nowplaying'] !== undefined &&
+                lastTrack["@attr"]["nowplaying"] === "true"
+        ) {
+            var image = lastTrack.image[2]['#text'];
+            var imageLightBox = lastTrack.image[3]['#text'];
+            if (image == "") {
+                image = "assets/img/no_disc.png";
+                imageLightBox = "assets/img/no_disc.png";
+            }
+
+            currentlyPlaying.find('.art').html('<img data-title="'+ lastTrack.name + ' - ' + lastTrack.artist['#text'] +'" data-remote="' + imageLightBox +'"  data-toggle="lightbox" src="' + image + '" width="140px"></img>');
+            currentlyPlaying.find('.track').html(lastTrack.name);
+            currentlyPlaying.find('.album').html(lastTrack.album['#text']);
+            currentlyPlaying.find('.artist').html(lastTrack.artist['#text']);
+            currentlyPlayingContainer.show();
+        } else {
+            var difference = (Date.now() / 1000 | 0) - lastTrack.date.uts;
+            var daysDifference = Math.floor(difference / 60 / 60 / 24);
+            difference -= daysDifference * 60 * 60 * 24;
+            var hoursDifference = Math.floor(difference / 60 / 60);
+            difference -= hoursDifference * 60 * 60;
+            var minutesDifference = Math.floor(difference / 60);
+            if (daysDifference > 0) {
+                lastScrobble
+                        .title('Days')
+                        .parseRawData({ result: hoursDifference })
+                        .render();
+            } else if (hoursDifference > 0) {
+                lastScrobble
+                        .title('Hours')
+                        .parseRawData({ result: hoursDifference })
+                        .render();
+            } else {
+                lastScrobble
+                        .title('Minutes')
+                        .parseRawData({ result: minutesDifference })
+                        .render();
+            }
+            lastScrobbleContainer.show();
+        }
+
+        var lastPlayedTrackContainer = $('#last-played-tracks');
+        lastPlayedTrackContainer.empty();
+        $(lastTracks.recenttracks.track).each(function (index, track) {
+            lastPlayedTrackContainer.append(createPlayingNode(
+                    track.image[0]['#text'],
+                    track.image[3]['#text'],
+                    track.name,
+                    track.artist['#text']
+            )).append('<hr>');
+        });
+    };
+
+    var todayMidnight = new Date();
+    todayMidnight.setHours(0, 0, 0, 0);
+    function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6:1);
+        return new Date(d.setDate(diff));
+    }
+
+    var monday = getMonday(new Date());
+    monday.setHours(0, 0, 0, 0);
+
+    lastFmApiClient.getUserInfo(updateScrobbles);
+    lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
+//    lastFmApiClient.getEvents(updateEvents);
+    lastFmApiClient.getPlayCount(
+        todayMidnight.getTime() / 1000,
+        Math.floor(new Date().getTime() / 1000),
+        updateTodayPlayCount
+    );
+
+    lastFmApiClient.getPlayCount(
+        monday.getTime() / 1000,
+        Math.floor(new Date().getTime() / 1000),
+        updateWeekPlayCount
+    );
+
+    setInterval(function () {
+        lastFmApiClient.getLastFiveTracks(updatePlayingTrack);
+        lastFmApiClient.getArtistCount(updateArtists);
+        lastFmApiClient.getUserInfo(updateScrobbles);
+        lastFmApiClient.getPlayCount(
+            todayMidnight.getTime() / 1000,
+            Math.floor(new Date().getTime() / 1000),
+            updateTodayPlayCount
+        );
+
+        lastFmApiClient.getPlayCount(
+            monday.getTime() / 1000,
+            Math.floor(new Date().getTime() / 1000),
+            updateWeekPlayCount
+        );
+    }, refreshTime);
+
+    function createPlayingNode(image, imageLightBox, title, artist) {
+
+        if (image == "") {
+            image = "assets/img/no_disc.png";
+            imageLightBox = "assets/img/no_disc.png";
+        }
+
+        return '<div class="row">' +
+                '<div class="col-md-3 art left-col"><img data-title="'+ title + ' - ' + artist +'" data-remote="' + imageLightBox +'" data-toggle="lightbox" data-remote="' + image + '" src="' + image + '" width="34px"></div>' +
+                '<div class="col-md-9 col-md-8 right-col" style="text-align: right">' + title + ' - ' + artist + '</div>' +
+                '</div>'
+        ;
+    }
+
+    $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
+</script>
+</body>
+</html>
