@@ -373,17 +373,16 @@
         });
     };
 
-    var today = new Date();
     var todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
     function getMonday(d) {
         d = new Date(d);
         var day = d.getDay(),
-                diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+        diff = d.getDate() - day + (day == 0 ? -6:1);
         return new Date(d.setDate(diff));
     }
 
-    var monday = getMonday(new Date()); // Mon Nov 08 2010
+    var monday = getMonday(new Date());
     monday.setHours(0, 0, 0, 0);
 
     lastFmApiClient.getUserInfo(updateScrobbles);
@@ -391,13 +390,13 @@
 //    lastFmApiClient.getEvents(updateEvents);
     lastFmApiClient.getPlayCount(
         todayMidnight.getTime() / 1000,
-        Math.floor(today.getTime() / 1000),
+        Math.floor(new Date().getTime() / 1000),
         updateTodayPlayCount
     );
 
     lastFmApiClient.getPlayCount(
         monday.getTime() / 1000,
-        Math.floor(today.getTime() / 1000),
+        Math.floor(new Date().getTime() / 1000),
         updateWeekPlayCount
     );
 
@@ -407,13 +406,13 @@
         lastFmApiClient.getUserInfo(updateScrobbles);
         lastFmApiClient.getPlayCount(
             todayMidnight.getTime() / 1000,
-            Math.floor(today.getTime() / 1000),
+            Math.floor(new Date().getTime() / 1000),
             updateTodayPlayCount
         );
 
         lastFmApiClient.getPlayCount(
             monday.getTime() / 1000,
-            Math.floor(today.getTime() / 1000),
+            Math.floor(new Date().getTime() / 1000),
             updateWeekPlayCount
         );
     }, refreshTime);
