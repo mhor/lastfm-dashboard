@@ -1,6 +1,6 @@
-#LastFm Dashboard [![Build Status](https://travis-ci.org/mhor/lastfm-dashboard.svg?branch=master)](https://travis-ci.org/mhor/lastfm-dashboard)
+# LastFm Dashboard [![Build Status](https://travis-ci.org/mhor/lastfm-dashboard.svg?branch=master)](https://travis-ci.org/mhor/lastfm-dashboard)
 
-##Introduction
+## Introduction
 
 Some stats about my LastFm account
 
@@ -14,6 +14,6 @@ $ bower install
 $ gulp debug
 ```
 
-##License
+## License
 
 MIT License, see [LICENSE](LICENSE)
