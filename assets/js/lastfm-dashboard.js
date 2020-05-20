@@ -6,7 +6,7 @@ MhorLastFmDashboard.commonMethod = {
 };
 
 function LastFmApiClient(username, apiKey) {
-    this.endpoint = "http://ws.audioscrobbler.com/2.0/?method=";
+    this.endpoint = "https://ws.audioscrobbler.com/2.0/?method=";
     this.format = "json";
     this.apiKey = apiKey;
     this.username = username;
