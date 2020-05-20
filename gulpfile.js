@@ -31,14 +31,10 @@ gulp.task('copy_dependencies', function() {
     'bower_components/ekko-lightbox/dist/ekko-lightbox.min.css'
   ];
 
-  var othersFilesToCopy = [
-    'bower_components/bootstrap/dist/fonts'
-  ];
   var copy = function(file, dir) {
       fs.copySync(file, path.join(dir, path.basename(file)));
   };
 
-    othersFilesToCopy.forEach(function(file) {copy(file, libDir)});
     cssFilesToCopy.forEach(function(file) {copy(file, libDir + '/css')});
     jsFilesToCopy.forEach(function(file) {copy(file, libDir + '/js')});
 });
